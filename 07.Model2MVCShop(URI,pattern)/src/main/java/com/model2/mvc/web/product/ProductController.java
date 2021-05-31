@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
 import com.model2.mvc.service.domain.Product;
-import com.model2.mvc.service.domain.User;
 import com.model2.mvc.service.product.ProductService;
 import com.model2.mvc.service.user.UserService;
 
@@ -57,7 +56,7 @@ public class ProductController {
 
 		System.out.println("/product/addProduct : GET");
 		
-		return "forward:/product/addProduct.jsp";
+		return "forward:/product/addProductView.jsp";
 	}
 	
 	@RequestMapping( value="addProduct", method=RequestMethod.POST )
@@ -67,7 +66,7 @@ public class ProductController {
 		//Business Logic
 		productService.addProduct(product);
 		
-		return "forward:/product/addProductView.jsp";
+		return "forward:/product/addProduct.jsp";
 	}
 	
 	//@RequestMapping("/getProduct.do")
@@ -79,6 +78,7 @@ public class ProductController {
 		Product product = productService.getProduct(prodNo);
 		// Model 과 View 연결
 		model.addAttribute("product", product);
+		System.err.println("겟 프로덕트 : "+product);
 		
 		return "forward:/product/getProduct.jsp";
 	}
@@ -93,26 +93,29 @@ public class ProductController {
 		// Model 과 View 연결
 		model.addAttribute("product", product);
 		
-		return "forward:/product/updateProduct.jsp";
-//		return "forward:/product/updateProductView.jsp";
+		return "forward:/product/updateProductView.jsp";
 	}
 	
 	//@RequestMapping("/updateProduct.do")
 	@RequestMapping( value="updateProduct", method=RequestMethod.POST )
-	public String updateProduct( @ModelAttribute("product") Product product , Model model , HttpServletRequest request,
-			HttpServletResponse response) throws Exception{
+	public String updateProduct( @ModelAttribute("product") Product product , Model model) throws Exception{
 
-		int prodNo=Integer.parseInt(request.getParameter("prodNo"));
-		System.out.println("/updatePorudct.do");
+		/*
+		 * int prodNo=Integer.parseInt(request.getParameter("prodNo"));
+		 * System.out.println("/updatePorudct.do");
+		 */
 		//Business Logic
+		System.err.println("업데이트 전 프로덕트 : "+product);
 		productService.updateProduct(product);
-		
+		System.out.println("업데이트 후 프로덕트 : "+product);
+		System.out.println("받아오는 prodNo :"+product.getProdNo());
+
 //		String sessionId=((User)session.getAttribute("user")).getUserId();
 //		if(sessionId.equals(user.getUserId())){
 //			session.setAttribute("user", user);
 //		}
 		
-		return "redirect:/getProduct.do?prodNo="+prodNo;
+		return "redirect:/product/getProduct?prodNo="+product.getProdNo();
 	}
 	
 	//@RequestMapping("/listProduct.do")
